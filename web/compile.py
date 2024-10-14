@@ -1,10 +1,12 @@
 from config import *
 from typing import List
-from datetime import datetime
 from hashlib import sha256
 import os
 from werkzeug.datastructures import FileStorage
 import subprocess
+
+uid = os.getuid()
+gid = os.getgid()
 
 
 def get_compile_dir(file: bytes) -> str:
@@ -49,6 +51,8 @@ def compile(file: FileStorage, march: str, target: str) -> list[str]:
             f"{dir_path}:/app/src",
             "-w",
             "/app",
+            "--user",
+            f"{uid}:{gid}",
             DOCKER_IMAGE,
             "make",
             f"MARCH_STRING={march}",

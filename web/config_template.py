@@ -6,7 +6,7 @@ compiler_directory = os.path.join(parent_directory, "compiler")
 
 PORT = 8000
 COMPILER_PATH = os.path.abspath(compiler_directory)
-DIST_DIR = "/tmp/rvc-dist"
+DIST_DIR = "/var/rvc-dist"
 ROOT_URI = "/riscvc" # the path hiden by proxy
 DIST_URI = f"{ROOT_URI}/dist"
 

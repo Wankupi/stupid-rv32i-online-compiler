@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request, jsonify
-from subprocess import run, TimeoutExpired, CalledProcessError
 from werkzeug.exceptions import RequestEntityTooLarge
+from compile import compile as my_compile
 from config import *
 import const
-from compile import compile as my_compile
 
 app = Flask(__name__)
 
@@ -34,7 +33,7 @@ def on_post():
         return render_template("result.html", error=error, rooturi=ROOT_URI)
 
 
-app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024  # 16 MB
+app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024
 
 
 @app.errorhandler(RequestEntityTooLarge)
