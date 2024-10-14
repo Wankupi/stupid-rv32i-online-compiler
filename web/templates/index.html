@@ -7,7 +7,11 @@
   <h1>CPU测试点在线编译</h1>
   <div>您可以借此生成自定义测试点</div>
 
-  <form action="{{ rooturi }}/submit" method="post" enctype="multipart/form-data">
+  <form
+    action="{{ rooturi }}/submit"
+    method="post"
+    enctype="multipart/form-data"
+  >
     <fieldset>
       <legend>上传文件</legend>
       <input type="file" name="srcfile" accept=".S,.c,.cpp" required />
@@ -39,32 +43,21 @@
         SIM
       </label>
     </fieldset>
+
     <br />
+
+    <fieldset>
+      <legend>选择优化等级 (O)</legend>
+      {% for v in const.ACCEPTED_OPT_LEVELS %}
+      <label>
+        <input type="radio" name="opt_level" value="{{ v }}" required {{
+        "checked" if v == "2" else "" }} /> {{ v }}
+      </label>
+      {% endfor %}
+    </fieldset>
+
+    <br />
+
     <button type="submit">提交</button>
   </form>
-
-  {% if data and dump %}
-  <h1>编译结果</h1>
-  <h2>data</h2>
-  <button onclick="copy('#data-text')">复制</button>
-  <details>
-    <summary>点击查看</summary>
-    <pre id="data-text">{{ data }}</pre>
-  </details>
-  <h2>dump</h2>
-  <button onclick="copy('#dump-text')">复制</button>
-  <details>
-    <summary>点击查看</summary>
-    <pre id="dump-text">{{ dump }}</pre>
-  </details>
-  {% endif %}
-  <script>
-    function copy(id) {
-      navigator.clipboard
-        .writeText(document.querySelector(id).innerText)
-        .then(() => {
-          alert("复制成功");
-        });
-    }
-  </script>
 </body>

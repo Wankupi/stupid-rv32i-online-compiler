@@ -17,9 +17,11 @@ OBJDUMP := $(RISCV_TOOLCHAIN)objdump
 MARCH_STRING ?= rv32ic
 ABI_STRING := ilp32
 
+OPT_LEVEL ?= 2
+
 AS_FLAGS := -march=$(MARCH_STRING)
-C_FLAGS := -I . -O2 -march=$(MARCH_STRING) -mabi=$(ABI_STRING) -g -std=c17
-CPP_FLAGS := -I . -O2 -march=$(MARCH_STRING) -mabi=$(ABI_STRING) -g -std=c++17
+C_FLAGS := -I . -O$(OPT_LEVEL) -march=$(MARCH_STRING) -mabi=$(ABI_STRING) -g -std=c17
+CPP_FLAGS := -I . -O$(OPT_LEVEL) -march=$(MARCH_STRING) -mabi=$(ABI_STRING) -g -std=c++17
 OBJCOPY_FLAGS := 
 
 SRC_FILE ?= src/src.cpp
@@ -36,10 +38,12 @@ else
   $(error "Unsupported target: $(TARGET)")
 endif
 
-OBJ_FILE := src/$(TARGET)-$(MARCH_STRING).o
-ELF_FILE := src/$(TARGET)-$(MARCH_STRING).elf
-DATA_FILE := src/$(TARGET)-$(MARCH_STRING).data
-DUMP_FILE := src/$(TARGET)-$(MARCH_STRING).dump
+VERSION_STRING := $(TARGET)-$(MARCH_STRING)-O$(OPT_LEVEL)
+
+OBJ_FILE := src/$(VERSION_STRING).o
+ELF_FILE := src/$(VERSION_STRING).elf
+DATA_FILE := src/$(VERSION_STRING).data
+DUMP_FILE := src/$(VERSION_STRING).dump
 
 all: $(DATA_FILE) $(DUMP_FILE)
 
@@ -49,16 +53,16 @@ all: $(DATA_FILE) $(DUMP_FILE)
 %.data: %.elf
 	$(OBJCOPY) $(OBJCOPY_FLAGS) $< $@
 
-$(ELF_FILE): rom.o $(SRC_FILE).$(TARGET)-$(MARCH_STRING).o
+$(ELF_FILE): rom.o $(SRC_FILE).$(VERSION_STRING).o
 	$(CC) $(C_FLAGS) -T memory.ld $^ -o $@ -nostdlib -lc -lm -lgcc -Wl,--no-warn-rwx-segments
 
-%.c.$(TARGET)-$(MARCH_STRING).o: %.c
+%.c.$(VERSION_STRING).o: %.c
 	$(CC) -c $< -o $@ $(C_FLAGS)
 
-%.cpp.$(TARGET)-$(MARCH_STRING).o: %.cpp
+%.cpp.$(VERSION_STRING).o: %.cpp
 	$(CXX) -c $< -o $@ $(CPP_FLAGS)
 
-%.S.$(TARGET)-$(MARCH_STRING).o: %.S
+%.S.$(VERSION_STRING).o: %.S
 	$(AS) $(AS_FLAGS) -c $< -o $@
 
 rom.o: rom.s

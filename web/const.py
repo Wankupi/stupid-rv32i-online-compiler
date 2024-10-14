@@ -9,3 +9,5 @@ ACCEPTED_MARCH = [
     "rv64imac",
     "rv64imafdc",
 ]
+
+ACCEPTED_OPT_LEVELS = ["0", "1", "2", "3", "s", "fast"]

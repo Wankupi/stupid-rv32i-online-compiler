@@ -37,7 +37,7 @@ def get_result_files(dir: str) -> List[str]:
     return file_list
 
 
-def compile(file: FileStorage, march: str, target: str) -> list[str]:
+def compile(file: FileStorage, march: str, target: str, opt_level: str) -> list[str]:
     dir_path = get_compile_dir(file.stream.read())
     save_filename = save_file(file, dir_path)  # only name, without path
     subprocess.run(
@@ -58,6 +58,7 @@ def compile(file: FileStorage, march: str, target: str) -> list[str]:
             f"MARCH_STRING={march}",
             f"TARGET={target}",
             f"SRC_FILE=src/{save_filename}",
+            f"OPT_LEVEL={opt_level}",
         ],
         check=True,
         timeout=COMPILE_TIMEOUT,
