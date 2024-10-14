@@ -21,7 +21,7 @@ def get_compile_dir(file: bytes) -> str:
 
 
 def save_file(file: FileStorage, path: str) -> str:
-    save_name = f"src.{file.filename.split(".")[-1]}"
+    save_name = f"src.{file.filename.split('.')[-1]}"
     if not os.path.exists(f"{path}/{save_name}"):
         file.stream.seek(0)
         file.save(f"{path}/{save_name}")
