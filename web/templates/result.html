@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<haed>
+  <title>在线编译</title>
+</haed>
+
+<body>
+  <h1>编译结果</h1>
+  <br />
+  <a href="{{ rooturi }}">返回首页</a>
+  <br />
+  {% if error %}
+  <h2>错误</h2>
+  <pre>{{ error }}</pre>
+  {% endif %}
+  <br />
+  {% if files %}
+  <h2>文件列表</h2>
+  <ul>
+    {% for file in files %}
+    <li>
+      <a href="{{ file.uri }}" download>{{ file.filename }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</body>

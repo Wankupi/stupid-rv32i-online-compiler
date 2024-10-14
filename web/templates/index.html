@@ -1,35 +1,70 @@
 <!DOCTYPE html>
-<title>在线编译</title>
+<haed>
+  <title>在线编译</title>
+</haed>
 
 <body>
-	<h1>CPU测试点在线编译</h1>
-	<div>您可以借此生成自定义测试点</div>
-	<form method=post enctype=multipart/form-data>
-		<input type=file name=srcfile>
-		<input type=submit value=上传>
-	</form>
+  <h1>CPU测试点在线编译</h1>
+  <div>您可以借此生成自定义测试点</div>
 
-	{% if data and dump %}
-	<h1>编译结果</h1>
-	<h2>data</h2>
-	<button onclick="copy('#data-text')">复制</button>
-	<details>
-		<summary>点击查看</summary>
-		<pre id="data-text">{{ data }}</pre>
-	</details>
-	<h2>dump</h2>
-	<button onclick="copy('#dump-text')">复制</button>
-	<details>
-		<summary>点击查看</summary>
-		<pre id="dump-text">{{ dump }}</pre>
-	</details>
-	{% endif %}
-	<script>
-		function copy(id) {
-			navigator.clipboard.writeText(
-				document.querySelector(id).innerText
-			)
-				.then(() => { alert("复制成功"); });
-		}
-	</script>
+  <form action="{{ rooturi }}/submit" method="post" enctype="multipart/form-data">
+    <fieldset>
+      <legend>上传文件</legend>
+      <input type="file" name="srcfile" accept=".S,.c,.cpp" required />
+    </fieldset>
+
+    <br />
+
+    <fieldset>
+      <legend>选择架构 (march)</legend>
+      {% for v in const.ACCEPTED_MARCH %}
+      <label>
+        <input type="radio" name="march" value="{{ v }}" required {{ "checked"
+        if v == "rv32ic" else "" }} /> {{ v }}
+      </label>
+      {% endfor %}
+    </fieldset>
+
+    <br />
+
+    <fieldset>
+      <legend>选择目标平台 (target)</legend>
+      <label>
+        <input type="radio" name="target" value="fpga" required />
+        FPGA
+      </label>
+
+      <label>
+        <input type="radio" name="target" value="sim" required checked />
+        SIM
+      </label>
+    </fieldset>
+    <br />
+    <button type="submit">提交</button>
+  </form>
+
+  {% if data and dump %}
+  <h1>编译结果</h1>
+  <h2>data</h2>
+  <button onclick="copy('#data-text')">复制</button>
+  <details>
+    <summary>点击查看</summary>
+    <pre id="data-text">{{ data }}</pre>
+  </details>
+  <h2>dump</h2>
+  <button onclick="copy('#dump-text')">复制</button>
+  <details>
+    <summary>点击查看</summary>
+    <pre id="dump-text">{{ dump }}</pre>
+  </details>
+  {% endif %}
+  <script>
+    function copy(id) {
+      navigator.clipboard
+        .writeText(document.querySelector(id).innerText)
+        .then(() => {
+          alert("复制成功");
+        });
+    }
+  </script>
 </body>
